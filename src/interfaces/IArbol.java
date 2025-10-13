@@ -8,4 +8,10 @@ public interface IArbol<T> {
     void mostrarInOrden();
     void mostrarPreOrden();
     void mostrarPostOrden();
+
+    int getTamano();
+    int getAltura();
+    int contarHojas();
+    boolean estaVacio();
+    void limpiar();
 }

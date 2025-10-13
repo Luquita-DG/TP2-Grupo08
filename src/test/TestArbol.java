@@ -59,6 +59,12 @@ public class TestArbol {
         arbolDni.mostrarPreOrden();  // Raíz → Izquierdo → Derecho
         arbolDni.mostrarPostOrden(); // Izquierdo → Derecho → Raíz
 
+        System.out.println("\n\n--- Datos del arbol por dni ---");
+        System.out.println("¿El árbol está vacío?: " + arbolDni.estaVacio());
+        System.out.println("Número total de nodos: " + arbolDni.getTamano());
+        System.out.println("Altura del árbol: " + arbolDni.getAltura());
+        System.out.println("Número de hojas: " + arbolDni.contarHojas());
+
         // ==============================================================
         // 🔹 BUSQUEDA EN EL ÁRBOL
         // ==============================================================
@@ -91,6 +97,13 @@ public class TestArbol {
         arbolNombre.mostrarInOrden();
         arbolNombre.mostrarPreOrden();
         arbolNombre.mostrarPostOrden();
+
+
+        System.out.println("\n\n--- Datos del arbol por NOMBRE ---");
+        System.out.println("¿El árbol está vacío?: " + arbolNombre.estaVacio());
+        System.out.println("Número total de nodos: " + arbolNombre.getTamano());
+        System.out.println("Altura del árbol: " + arbolNombre.getAltura());
+        System.out.println("Número de hojas: " + arbolNombre.contarHojas());
 
     }
 }
