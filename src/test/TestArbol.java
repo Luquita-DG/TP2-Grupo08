@@ -17,7 +17,7 @@ public class TestArbol {
     public static void main(String[] args) {
 
         // ==============================================================
-        // 🔹 COMPARADOR POR DNI
+        //  COMPARADOR POR DNI
         // ==============================================================
         // Se define una funcion de comparacion que usa el campo DNI
         // para decidir el orden de los nodos dentro del árbol.
@@ -27,7 +27,7 @@ public class TestArbol {
         Arbol<Persona> arbolDni = new Arbol<>(compPorDni);
 
         // ==============================================================
-        // 🔹 CREACION DEL CONJUNTO DE PERSONAS
+        //  CREACION DEL CONJUNTO DE PERSONAS
         // ==============================================================
         Persona[] personas = {
                 new Persona("100", "Ana", "García", 30),
@@ -52,7 +52,7 @@ public class TestArbol {
             arbolDni.insertar(p);
 
         // ==============================================================
-        // 🔹 MOSTRAR RECORRIDOS DEL ÁRBOL POR DNI
+        //  MOSTRAR RECORRIDOS DEL ÁRBOL POR DNI
         // ==============================================================
         System.out.println("=== Arbol ordenado por DNI ===");
         arbolDni.mostrarInOrden();   // Orden ascendente por DNI
@@ -66,14 +66,14 @@ public class TestArbol {
         System.out.println("Número de hojas: " + arbolDni.contarHojas());
 
         // ==============================================================
-        // 🔹 BUSQUEDA EN EL ÁRBOL
+        //  BUSQUEDA EN EL ÁRBOL
         // ==============================================================
         System.out.println("\n¿Existe el DNI 107?");
         boolean existe = arbolDni.buscar(new Persona("107", "", "", 0));
         System.out.println(existe ? "Persona encontrada en el arbol." : " Persona no encontrada.");
 
         // ==============================================================
-        // 🔹 ELIMINACION DE UN NODO
+        //  ELIMINACION DE UN NODO
         // ==============================================================
         System.out.println("\nEliminando el nodo con DNI 103...");
         arbolDni.eliminar(new Persona("103", "", "", 0));
@@ -81,7 +81,7 @@ public class TestArbol {
         arbolDni.mostrarInOrden();
 
         // ==============================================================
-        // 🔹 COMPARADOR POR NOMBRE
+        //  COMPARADOR POR NOMBRE
         // ==============================================================
         // Nuevo árbol que se ordenara alfabeticamente por nombre.
         Comparator<Persona> compPorNombre = Comparator.comparing(Persona::getNombre);
@@ -91,7 +91,7 @@ public class TestArbol {
             arbolNombre.insertar(p);
 
         // ==============================================================
-        // 🔹 MOSTRAR RECORRIDOS DEL ARBOL POR NOMBRE
+        //  MOSTRAR RECORRIDOS DEL ARBOL POR NOMBRE
         // ==============================================================
         System.out.println("\n=== Arbol ordenado por NOMBRE ===");
         arbolNombre.mostrarInOrden();
