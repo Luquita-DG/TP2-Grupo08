@@ -34,3 +34,31 @@ public class Grafo implements IGrafo {
             nodoDestino.agregarVecino(nodoOrigen); // Grafo no dirigido
         }
     }
+
+    // Recorrido en anchura (Breadth First Search)
+    public void bfs(int inicio) {
+
+        if (!nodos.containsKey(inicio)) return; // precondición
+
+        ///Lista y cola
+        Set<Integer> visitados = new HashSet<>(); // Conjunto de nodos visitados
+        Queue<Nodo> cola = new LinkedList<>(); // Cola para el recorrido
+
+        Nodo nodoInicio = nodos.get(inicio);
+        cola.add(nodoInicio);
+        visitados.add(inicio);
+
+        System.out.println("Recorrido BFS:");
+        while (!cola.isEmpty()) {
+            Nodo actual = cola.poll();
+            System.out.print(actual.getValor() + " ");
+
+            for (INodo vecino : actual.getVecinos()) {
+                if (!visitados.contains(vecino.getValor())) {
+                    visitados.add(vecino.getValor());
+                    cola.add((Nodo) vecino);
+                }
+            }
+        }
+        System.out.println();
+    }

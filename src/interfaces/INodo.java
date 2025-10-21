@@ -71,4 +71,24 @@ public interface INodo<T> {
 
     /*-------------------------------------------------*/
     /*-------------------------------------------------*/
+
+    /**
+     * Agrega un nodo vecino a la lista de adyacencia interna del nodo actual.
+     * 
+     * Pre: El parámetro 'vecino' no debe ser nulo y debe implementar la interfaz INodo.
+     * Post: El nodo 'vecino' queda agregado a la lista interna de vecinos del nodo actual.
+     */
+    void agregarVecino(INodo vecino); 
+
+    /*-------------------------------------------------*/
+    /*-------------------------------------------------*/
+
+    /**
+     * Devuelve la lista de vecinos asociados al nodo actual.
+     * 
+     * Pre: La lista de vecinos puede estar vacía, pero debe estar inicializada.
+     * Post: Se retorna una lista (posiblemente vacía) con todos los nodos vecinos del nodo actual.
+     */
+    List<INodo> getVecinos();
+
 }
