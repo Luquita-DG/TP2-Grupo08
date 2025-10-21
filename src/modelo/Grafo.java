@@ -62,3 +62,28 @@ public class Grafo implements IGrafo {
         }
         System.out.println();
     }
+
+    // Recorrido en profundidad (Depth First Search)
+    public void dfs(int inicio) {
+        if (!nodos.containsKey(inicio)) return; // precondición
+
+        Set<Integer> visitados = new HashSet<>();
+        System.out.println("Recorrido DFS:");
+        dfsRec(nodos.get(inicio), visitados); //Pila!!!!
+        System.out.println();
+    }
+
+    // Función recursiva auxiliar para DFS
+    private void dfsRec(Nodo actual, Set<Integer> visitados) {
+        visitados.add(actual.getValor());
+        System.out.print(actual.getValor() + " ");
+
+        List<INodo> vecinos = actual.getVecinos();
+        for (int i = vecinos.size() - 1; i >= 0; i--) {
+            INodo vecino = vecinos.get(i);
+            if (!visitados.contains(vecino.getValor())) {
+                dfsRec((Nodo) vecino, visitados);
+            }
+        }
+    }
+}
