@@ -86,4 +86,31 @@ public class Grafo implements IGrafo {
             }
         }
     }
+
+    // Muestra la matriz de adyacencia del grafo
+    public void mostrarMatrizAdyacencia() {
+        System.out.println("Matriz de Adyacencia:");
+        List<Integer> claves = new ArrayList<>(nodos.keySet());
+
+        Collections.sort(claves); // Ordenar nodos por valor
+
+        // Encabezado
+        System.out.print("   ");
+        for (int i : claves) System.out.print(i + " ");
+        System.out.println();
+
+        // Filas de la matriz
+        for (int i : claves) { /// 1--- 2  ---- 3 Columnas
+            System.out.print(i + ": ");
+            for (int j : claves) {  /// 1 , 2, 3 --- Filas
+                Nodo nodoI = nodos.get(i);
+                Nodo nodoJ = nodos.get(j);
+                System.out.print(nodoI.getVecinos().contains(nodoJ) ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+    }
+
+
+
 }
