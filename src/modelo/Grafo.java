@@ -111,6 +111,22 @@ public class Grafo implements IGrafo {
         }
     }
 
+    // Muestra la lista de adyacencia del grafo
+    public void mostrarListaAdyacencia() {
+        System.out.println("Lista de Adyacencia:");
+
+        for (Map.Entry<Integer, Nodo> entrada : nodos.entrySet()) {
+
+            System.out.print(entrada.getKey() + ": ");
+            List<INodo> vecinos = entrada.getValue().getVecinos();
+
+            for (INodo vecino : vecinos) {
+                System.out.print(vecino.getValor() + " ");
+            }
+            System.out.println();
+        }
+    }
+
 
 
 }
