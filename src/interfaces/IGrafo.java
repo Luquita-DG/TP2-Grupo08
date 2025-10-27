@@ -29,7 +29,7 @@ public interface IGrafo<T> {
      * Post:
      * La estructura de adyacencia se actualiza incluyendo la nueva conexión entre los nodos.
      */
-    void agregarArista(T origen, T destino);
+    void agregarArista(T origen, T destino, int peso);
 
     /*-------------------------------------------------*/
     /*-------------------------------------------------*/

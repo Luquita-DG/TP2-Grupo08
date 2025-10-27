@@ -86,7 +86,6 @@ public interface INodo<T> {
 
     /**
      * Devuelve la lista de vecinos asociados al nodo actual.
-     * 
      * Pre: La lista de vecinos puede estar vacía, pero debe estar inicializada.
      * Post: Se retorna una lista (posiblemente vacía) con todos los nodos vecinos del nodo actual.
      */

@@ -1,61 +1,107 @@
 package modelo;
 
-//Implementación del Grafo
-import java.util.*;
-
 import interfaces.IGrafo;
-import interfaces.INodo;
+import interfaces.INodoGrafo;
+import java.util.*;
 
 public class Grafo<T> implements IGrafo<T> {
 
-    //(clave, valor)
-    //Clave valor como diccionarios de python
-    private Map<T, INodo<T>> nodos = new HashMap<>(); // Mapa de valor -> Nodo
+    private Map<T, INodoGrafo<T>> nodos = new HashMap<>();
+    private boolean esDirigido = false;
 
+    public Grafo(boolean esDirigido) {
+        this.esDirigido = esDirigido;
+    }
 
-
-    // Agrega un nodo al grafo si no existe aún
-
+    @Override
     public void agregarNodo(T valor) {
         if (!nodos.containsKey(valor)) {
-            nodos.put(valor, new Nodo<>(valor));
+            nodos.put(valor, new NodoGrafo<>(valor));
         }
     }
 
-    // Agrega una arista (conexión) entre dos nodos existentes
-    public void agregarArista(T origen, T destino) {
+    @Override
+    public void agregarArista(T origen, T destino, int peso) {
         if (nodos.containsKey(origen) && nodos.containsKey(destino)) {
-            INodo<T> nodoOrigen = nodos.get(origen); //Agarro el nodo que tiene
-            //como clave al origen... get retorna el NODO
-            INodo<T> nodoDestino = nodos.get(destino);
-
-            nodoOrigen.agregarVecino(nodoDestino);
-
-            nodoDestino.agregarVecino(nodoOrigen); // Grafo no dirigido
+            INodoGrafo<T> nodoOrigen = nodos.get(origen);
+            INodoGrafo<T> nodoDestino = nodos.get(destino);
+            nodoOrigen.agregarVecino(nodoDestino, peso);
+            if (!esDirigido) {
+                nodoDestino.agregarVecino(nodoOrigen, peso);
+            }
         }
     }
 
-    // Recorrido en anchura (Breadth First Search)
+    @Override
+    public void mostrarMatrizAdyacencia() {
+        System.out.println("Matriz de Adyacencia:");
+        List<T> listaNodos = new ArrayList<>(nodos.keySet());
+        int size = listaNodos.size();
+        int[][] matriz = new int[size][size];
+
+        Map<T, Integer> indices = new HashMap<>();
+        for (int i = 0; i < size; i++) {
+            indices.put(listaNodos.get(i), i);
+        }
+
+        for (int i = 0; i < size; i++) {
+            INodoGrafo<T> nodo = nodos.get(listaNodos.get(i));
+            for (INodoGrafo.Arista<T> arista : nodo.getVecinos()) {
+                int j = indices.get(arista.destino.getValor());
+                matriz[i][j] = 1; // O arista.peso si se quiere mostrar el peso
+            }
+        }
+
+        System.out.print("      ");
+        for (T nodo : listaNodos) {
+            String str = nodo.toString();
+            System.out.print(String.format("%-10s", str.substring(1, Math.min(str.length(), 10))));
+        }
+        System.out.println();
+
+        for (int i = 0; i < size; i++) {
+            String str = listaNodos.get(i).toString();
+            System.out.print(String.format("%-6s", str.substring(1, Math.min(str.length(), 6))) + "|");
+            for (int j = 0; j < size; j++) {
+                System.out.print(String.format("%-10d", matriz[i][j]));
+            }
+            System.out.println();
+        }
+    }
+
+    @Override
+    public void mostrarListaAdyacencia() {
+        System.out.println("Lista de Adyacencia:");
+        for (Map.Entry<T, INodoGrafo<T>> entrada : nodos.entrySet()) {
+            System.out.print(entrada.getKey() + ": ");
+            List<INodoGrafo.Arista<T>> vecinos = entrada.getValue().getVecinos();
+            for (INodoGrafo.Arista<T> arista : vecinos) {
+                System.out.print(arista.destino.getValor() + "(" + arista.peso + ") ");
+            }
+            System.out.println();
+        }
+    }
+
+    @Override
     public void bfs(T inicio) {
+        if (!nodos.containsKey(inicio)) return;
 
-        if (!nodos.containsKey(inicio)) return; // precondición
+        Set<T> visitados = new HashSet<>();
+        Queue<INodoGrafo<T>> cola = new LinkedList<>();
 
-        ///Lista y cola
-        Set<T> visitados = new HashSet<>(); // Conjunto de nodos visitados
-        Queue<INodo<T>> cola = new LinkedList<>(); // Cola para el recorrido
-
-        INodo<T> nodoInicio = nodos.get(inicio);
+        INodoGrafo<T> nodoInicio = nodos.get(inicio);
         cola.add(nodoInicio);
         visitados.add(inicio);
 
         System.out.println("Recorrido BFS:");
         while (!cola.isEmpty()) {
-            INodo<T> actual = cola.poll();
-            System.out.print(actual.getDato() + " ");
+            INodoGrafo<T> actual = cola.poll();
+            System.out.print(actual.getValor() + " ");
 
-            for (INodo<T> vecino : actual.getVecinos()) {
-                if (!visitados.contains(vecino.getDato())) {
-                    visitados.add(vecino.getDato());
+            for (INodoGrafo.Arista<T> arista : actual.getVecinos()) {
+                INodoGrafo<T> vecino = arista.destino;
+                if (!visitados.contains(vecino.getValor())) {
+                    visitados.add(vecino.getValor());
                     cola.add(vecino);
                 }
             }
@@ -63,69 +109,25 @@ public class Grafo<T> implements IGrafo<T> {
         System.out.println();
     }
 
-    // Recorrido en profundidad (Depth First Search)
+    @Override
     public void dfs(T inicio) {
-        if (!nodos.containsKey(inicio)) return; // precondición
+        if (!nodos.containsKey(inicio)) return;
 
         Set<T> visitados = new HashSet<>();
         System.out.println("Recorrido DFS:");
-        dfsRec(nodos.get(inicio), visitados); //Pila!!!!
+        dfsRec(nodos.get(inicio), visitados);
         System.out.println();
     }
 
-    // Función recursiva auxiliar para DFS
-    private void dfsRec(INodo<T> actual, Set<T> visitados) {
-        visitados.add(actual.getDato());
-        System.out.print(actual.getDato() + " ");
+    private void dfsRec(INodoGrafo<T> actual, Set<T> visitados) {
+        visitados.add(actual.getValor());
+        System.out.print(actual.getValor() + " ");
 
-        List<INodo<T>> vecinos = actual.getVecinos();
-        for (int i = vecinos.size() - 1; i >= 0; i--) {
-            INodo<T> vecino = vecinos.get(i);
-            if (!visitados.contains(vecino.getDato())) {
+        for (INodoGrafo.Arista<T> arista : actual.getVecinos()) {
+            INodoGrafo<T> vecino = arista.destino;
+            if (!visitados.contains(vecino.getValor())) {
                 dfsRec(vecino, visitados);
             }
-        }
-    }
-
-    // Muestra la matriz de adyacencia del grafo
-    public void mostrarMatrizAdyacencia() {
-        System.out.println("Matriz de Adyacencia:");
-        List<T> claves = new ArrayList<>(nodos.keySet());
-
-        // Para poder ordenar, el tipo T debería implementar Comparable,
-        // o se debería pasar un Comparator.
-        // Collections.sort((List)claves); // Opcional, requiere que T sea Comparable
-
-        // Encabezado
-        System.out.print("   ");
-        for (T i : claves) System.out.print(i + " ");
-        System.out.println();
-
-        // Filas de la matriz
-        for (T i : claves) { /// 1--- 2  ---- 3 Columnas
-            System.out.print(i + ": ");
-            for (T j : claves) {  /// 1 , 2, 3 --- Filas
-                INodo<T> nodoI = nodos.get(i);
-                INodo<T> nodoJ = nodos.get(j);
-                System.out.print(nodoI.getVecinos().contains(nodoJ) ? "1 " : "0 ");
-            }
-            System.out.println();
-        }
-    }
-
-    // Muestra la lista de adyacencia del grafo
-    public void mostrarListaAdyacencia() {
-        System.out.println("Lista de Adyacencia:");
-
-        for (Map.Entry<T, INodo<T>> entrada : nodos.entrySet()) {
-
-            System.out.print(entrada.getKey() + ": ");
-            List<INodo<T>> vecinos = entrada.getValue().getVecinos();
-
-            for (INodo<T> vecino : vecinos) {
-                System.out.print(vecino.getDato() + " ");
-            }
-            System.out.println();
         }
     }
 }

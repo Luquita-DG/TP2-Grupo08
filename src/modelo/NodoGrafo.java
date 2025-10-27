@@ -4,27 +4,27 @@ import interfaces.INodoGrafo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodoGrafo implements INodoGrafo {
+public class NodoGrafo<T> implements INodoGrafo<T> {
 
-    private int valor;
-    private List<Arista> vecinos = new ArrayList<>();
+    private T valor;
+    private List<Arista<T>> vecinos = new ArrayList<>();
 
-    public NodoGrafo(int valor) {
+    public NodoGrafo(T valor) {
         this.valor = valor;
     }
 
     @Override
-    public int getValor() {
+    public T getValor() {
         return valor;
     }
 
     @Override
-    public void agregarVecino(INodoGrafo destino, int peso) {
-        vecinos.add(new Arista(destino, peso));
+    public void agregarVecino(INodoGrafo<T> destino, int peso) {
+        vecinos.add(new Arista<>(destino, peso));
     }
 
     @Override
-    public List<Arista> getVecinos() {
+    public List<Arista<T>> getVecinos() {
         return vecinos;
     }
 }
