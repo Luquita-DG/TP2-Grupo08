@@ -1,42 +1,28 @@
-package test;
+package modelo;
 
-import interfaces.IGrafo;
-import modelo.Grafo;
+import java.util.Map;
 
-public class TestGrafo {
-
+public class Main {
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
+        Grafo g = new Grafo();
 
-        IGrafo grafo = new Grafo();
+        // Nodos
+        for (int i = 1; i <= 4; i++) g.agregarNodo(i);
 
-        // Crear nodos
-        grafo.agregarNodo(1);
-        grafo.agregarNodo(2);
-        grafo.agregarNodo(3);
-        grafo.agregarNodo(4);
-        grafo.agregarNodo(5);
-        grafo.agregarNodo(6);
+        // Aristas con pesos (pueden ser negativos)
+        g.agregarArista(1, 2, 5);
+        g.agregarArista(1, 3, -10);
+        g.agregarArista(2, 4, 7);
+        g.agregarArista(3, 4, 2);
 
-        // Crear conexiones (aristas)
-        grafo.agregarArista(1, 2);
-        grafo.agregarArista(1, 3);
-        grafo.agregarArista(2, 4);
-        grafo.agregarArista(2, 5);
-        grafo.agregarArista(3, 1);
-        grafo.agregarArista(4, 6);
-        grafo.agregarArista(5, 5);
-        grafo.agregarArista(6, 5);
-        grafo.agregarArista(1, 2);
-        grafo.agregarArista(1, 2);
-        grafo.agregarArista(1, 2);
+        g.mostrarListaAdyacencia();
+        g.bfs(1);
+        g.dfs(1);
 
-        // Visualización y recorridos
-        grafo.mostrarMatrizAdyacencia();
-        grafo.mostrarListaAdyacencia();
-        grafo.bfs(1);
-        grafo.dfs(1);
-
+        System.out.println("\nDijkstra versión MAX (valor absoluto más grande):");
+        Map<Integer, Grafo.Camino> resultado = g.dijkstraMax(1);
+        for (Map.Entry<Integer, Grafo.Camino> e : resultado.entrySet()) {
+            System.out.println("Nodo " + e.getKey() + " -> " + e.getValue());
+        }
     }
-
 }
