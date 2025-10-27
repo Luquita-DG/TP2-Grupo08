@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.util.List;
+import modelo.Arista;
 
 public interface INodoGrafo<T> {
 
@@ -23,16 +24,5 @@ public interface INodoGrafo<T> {
      */
     List<Arista<T>> getVecinos();
 
-    /**
-     * Estructura de datos interna para representar una arista.
-     * Contiene nodo destino y peso.
-     */
-    class Arista<T> {
-        public INodoGrafo<T> destino;
-        public int peso;
-        public Arista(INodoGrafo<T> destino, int peso) {
-            this.destino = destino;
-            this.peso = peso;
-        }
-    }
+
 }

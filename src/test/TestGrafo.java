@@ -2,11 +2,12 @@ package test;
 
 import modelo.Grafo;
 import modelo.Persona;
+import java.util.Map;
 
 public class TestGrafo {
     public static void main(String[] args) {
-        // Para que el grafo sea dirigido, cambiar 'false' por 'true'
-        Grafo<Persona> g = new Grafo<>(false);
+        // Grafo dirigido para que Dijkstra tenga más sentido en un solo camino
+        Grafo<Persona> g = new Grafo<>(true);
 
         // Nodos
         Persona p1 = new Persona("111", "Juan", "Perez", 30);
@@ -24,34 +25,17 @@ public class TestGrafo {
         g.agregarArista(p1, p3, 10);
         g.agregarArista(p2, p4, 7);
         g.agregarArista(p3, p4, 2);
+        g.agregarArista(p2, p3, -2); // Un camino alternativo
 
-        System.out.println("--- Grafo No Dirigido ---");
         g.mostrarListaAdyacencia();
-        System.out.println();
-        g.mostrarMatrizAdyacencia();
         System.out.println();
         g.bfs(p1);
         System.out.println();
-        g.dfs(p1);
 
-        System.out.println("\n\n--- Grafo Dirigido ---");
-        Grafo<Persona> gDirigido = new Grafo<>(true);
-        gDirigido.agregarNodo(p1);
-        gDirigido.agregarNodo(p2);
-        gDirigido.agregarNodo(p3);
-        gDirigido.agregarNodo(p4);
-        gDirigido.agregarArista(p1, p2, 5);
-        gDirigido.agregarArista(p1, p3, 10);
-        gDirigido.agregarArista(p2, p4, 7);
-        gDirigido.agregarArista(p3, p4, 2);
-
-        gDirigido.mostrarListaAdyacencia();
-        System.out.println();
-        gDirigido.mostrarMatrizAdyacencia();
-        System.out.println();
-        System.out.println("Recorridos en grafo dirigido (se pueden recorrer igual):");
-        gDirigido.bfs(p1);
-        System.out.println();
-        gDirigido.dfs(p1);
+        System.out.println("\n--- Dijkstra versión MAX (camino con mayor suma de pesos) ---");
+        Map<Persona, Grafo.Camino<Persona>> resultado = g.dijkstraMax(p1);
+        for (Map.Entry<Persona, Grafo.Camino<Persona>> e : resultado.entrySet()) {
+            System.out.println("Desde " + p1.getNombre() + " hasta " + e.getKey().getNombre() + " -> " + e.getValue());
+        }
     }
 }

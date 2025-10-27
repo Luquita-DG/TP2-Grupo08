@@ -9,6 +9,28 @@ public class Grafo<T> implements IGrafo<T> {
     private Map<T, INodoGrafo<T>> nodos = new HashMap<>();
     private boolean esDirigido = false;
 
+    /**
+     * Clase interna para almacenar el resultado del algoritmo de Dijkstra.
+     * Contiene la distancia (suma de pesos) y la secuencia de nodos en la ruta.
+     */
+    public static class Camino<T> {
+        public int distancia;
+        public List<T> ruta;
+
+        public Camino() {
+            this.distancia = Integer.MIN_VALUE; // Se inicia en el valor mínimo para encontrar el máximo
+            this.ruta = new LinkedList<>();
+        }
+
+        @Override
+        public String toString() {
+            if (distancia == Integer.MIN_VALUE) {
+                return "Distancia: Inalcanzable, Ruta: []";
+            }
+            return "Camino{distancia=" + distancia + ", ruta=" + ruta + "}";
+        }
+    }
+
     public Grafo(boolean esDirigido) {
         this.esDirigido = esDirigido;
     }
@@ -46,9 +68,9 @@ public class Grafo<T> implements IGrafo<T> {
 
         for (int i = 0; i < size; i++) {
             INodoGrafo<T> nodo = nodos.get(listaNodos.get(i));
-            for (INodoGrafo.Arista<T> arista : nodo.getVecinos()) {
+            for (Arista<T> arista : nodo.getVecinos()) {
                 int j = indices.get(arista.destino.getValor());
-                matriz[i][j] = 1; // O arista.peso si se quiere mostrar el peso
+                matriz[i][j] = 1;
             }
         }
 
@@ -74,8 +96,8 @@ public class Grafo<T> implements IGrafo<T> {
         System.out.println("Lista de Adyacencia:");
         for (Map.Entry<T, INodoGrafo<T>> entrada : nodos.entrySet()) {
             System.out.print(entrada.getKey() + ": ");
-            List<INodoGrafo.Arista<T>> vecinos = entrada.getValue().getVecinos();
-            for (INodoGrafo.Arista<T> arista : vecinos) {
+            List<Arista<T>> vecinos = entrada.getValue().getVecinos();
+            for (Arista<T> arista : vecinos) {
                 System.out.print(arista.destino.getValor() + "(" + arista.peso + ") ");
             }
             System.out.println();
@@ -98,7 +120,7 @@ public class Grafo<T> implements IGrafo<T> {
             INodoGrafo<T> actual = cola.poll();
             System.out.print(actual.getValor() + " ");
 
-            for (INodoGrafo.Arista<T> arista : actual.getVecinos()) {
+            for (Arista<T> arista : actual.getVecinos()) {
                 INodoGrafo<T> vecino = arista.destino;
                 if (!visitados.contains(vecino.getValor())) {
                     visitados.add(vecino.getValor());
@@ -123,11 +145,59 @@ public class Grafo<T> implements IGrafo<T> {
         visitados.add(actual.getValor());
         System.out.print(actual.getValor() + " ");
 
-        for (INodoGrafo.Arista<T> arista : actual.getVecinos()) {
+        for (Arista<T> arista : actual.getVecinos()) {
             INodoGrafo<T> vecino = arista.destino;
             if (!visitados.contains(vecino.getValor())) {
                 dfsRec(vecino, visitados);
             }
         }
+    }
+
+    /**
+     * Implementación de Dijkstra para encontrar el camino de MÁXIMO peso.
+     * Utiliza una cola de prioridad para explorar el nodo con mayor distancia acumulada primero.
+     */
+    public Map<T, Camino<T>> dijkstraMax(T inicio) {
+        if (!nodos.containsKey(inicio)) return Collections.emptyMap();
+
+        Map<T, Camino<T>> resultados = new HashMap<>();
+        Map<T, T> predecesores = new HashMap<>();
+        for (T claveNodo : nodos.keySet()) {
+            resultados.put(claveNodo, new Camino<>());
+        }
+
+        resultados.get(inicio).distancia = 0;
+
+        PriorityQueue<Map.Entry<T, Integer>> cola = new PriorityQueue<>((a, b) -> b.getValue().compareTo(a.getValue()));
+        cola.add(new AbstractMap.SimpleEntry<>(inicio, 0));
+
+        while (!cola.isEmpty()) {
+            T u = cola.poll().getKey();
+            INodoGrafo<T> nodoU = nodos.get(u);
+
+            for (Arista<T> arista : nodoU.getVecinos()) {
+                T v = arista.destino.getValor();
+                int peso = arista.peso;
+
+                if (resultados.get(u).distancia != Integer.MIN_VALUE && resultados.get(u).distancia + peso > resultados.get(v).distancia) {
+                    resultados.get(v).distancia = resultados.get(u).distancia + peso;
+                    predecesores.put(v, u);
+                    cola.add(new AbstractMap.SimpleEntry<>(v, resultados.get(v).distancia));
+                }
+            }
+        }
+
+        for (T nodoDestino : resultados.keySet()) {
+            if (resultados.get(nodoDestino).distancia != Integer.MIN_VALUE) {
+                LinkedList<T> ruta = new LinkedList<>();
+                T paso = nodoDestino;
+                while (paso != null) {
+                    ruta.addFirst(paso);
+                    paso = predecesores.get(paso);
+                }
+                resultados.get(nodoDestino).ruta = ruta;
+            }
+        }
+        return resultados;
     }
 }
