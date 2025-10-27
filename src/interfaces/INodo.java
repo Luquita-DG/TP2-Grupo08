@@ -1,4 +1,5 @@
 package interfaces;
+import java.util.List;
 
 public interface INodo<T> {
 
@@ -78,7 +79,7 @@ public interface INodo<T> {
      * Pre: El parámetro 'vecino' no debe ser nulo y debe implementar la interfaz INodo.
      * Post: El nodo 'vecino' queda agregado a la lista interna de vecinos del nodo actual.
      */
-    void agregarVecino(INodo vecino); 
+    void agregarVecino(INodo<T> vecino);
 
     /*-------------------------------------------------*/
     /*-------------------------------------------------*/
@@ -89,6 +90,6 @@ public interface INodo<T> {
      * Pre: La lista de vecinos puede estar vacía, pero debe estar inicializada.
      * Post: Se retorna una lista (posiblemente vacía) con todos los nodos vecinos del nodo actual.
      */
-    List<INodo> getVecinos();
+    List<INodo<T>> getVecinos();
 
 }
